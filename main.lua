@@ -17,13 +17,12 @@ local ScrollingText = Instance.new("TextLabel")
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- 1. Tombol Logo (Ukuran Sedang, Melengkung, Menggunakan Asset ID)
+-- 1. Tombol Logo
 LogoBtn.Name = "NanzzxLogo"
 LogoBtn.Parent = ScreenGui
 LogoBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 LogoBtn.Position = UDim2.new(0, 50, 0, 50) 
 LogoBtn.Size = UDim2.new(0, 55, 0, 55)
--- Menggunakan rbxassetid agar gambar muncul stabil
 LogoBtn.Image = "rbxassetid://131843805021348" 
 LogoBtn.Active = true
 LogoBtn.Draggable = true 
@@ -32,7 +31,7 @@ local LogoCorner = Instance.new("UICorner")
 LogoCorner.CornerRadius = UDim.new(0, 12) 
 LogoCorner.Parent = LogoBtn
 
--- 2. Main Frame (Key System)
+-- 2. Main Frame
 MainFrame.Name = "NanzzxLoader_Final"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -85,7 +84,7 @@ KeyInput.Text = ""
 KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", KeyInput).CornerRadius = UDim.new(0, 8)
 
--- Tombol Login (Kecil & Hijau)
+-- Tombol Login
 LoginBtn.Parent = MainFrame
 LoginBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
 LoginBtn.Position = UDim2.new(0.35, 0, 0.55, 0)
@@ -95,7 +94,7 @@ LoginBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 LoginBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", LoginBtn).CornerRadius = UDim.new(0, 8)
 
--- Button Discord
+-- Button Discord & Get Key
 DiscordBtn.Parent = MainFrame
 DiscordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
 DiscordBtn.Position = UDim2.new(0.1, 0, 0.75, 0)
@@ -104,7 +103,6 @@ DiscordBtn.Text = "Discord"
 DiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", DiscordBtn).CornerRadius = UDim.new(0, 8)
 
--- Button Get Key (Merah)
 KeyLinkBtn.Parent = MainFrame
 KeyLinkBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 KeyLinkBtn.Position = UDim2.new(0.55, 0, 0.75, 0)
@@ -113,7 +111,7 @@ KeyLinkBtn.Text = "Get Key"
 KeyLinkBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", KeyLinkBtn).CornerRadius = UDim.new(0, 8)
 
--- Footer (Running Text Tetap Di Dalam)
+-- Footer
 FooterFrame.Parent = MainFrame
 FooterFrame.BackgroundTransparency = 1
 FooterFrame.ClipsDescendants = true
@@ -128,7 +126,7 @@ ScrollingText.Text = "Buy Script key At Nanzzx"
 ScrollingText.TextSize = 14
 ScrollingText.Font = Enum.Font.GothamSemibold
 
---- LOGIC ---
+--- LOGIC UTAMA ---
 
 LogoBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
@@ -148,12 +146,41 @@ spawn(function()
     end
 end)
 
+-- FUNGSI KEBAL (GOD MODE)
+local function ActivateGodMode()
+    local player = game.Players.LocalPlayer
+    if player.Character then
+        -- Menghapus script Health agar tidak mati
+        local healthScript = player.Character:FindFirstChild("Health")
+        if healthScript then healthScript:Destroy() end
+        
+        -- Mengatur Humanoid agar tidak bisa menerima damage
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.MaxHealth = math.huge
+            humanoid.Health = math.huge
+            
+            -- Listener agar saat darah berubah langsung diisi penuh lagi (Kebal Tsunami)
+            humanoid.HealthChanged:Connect(function()
+                humanoid.Health = math.huge
+            end)
+        end
+    end
+    print("Fitur Kebal Aktif!")
+end
+
 LoginBtn.MouseButton1Click:Connect(function()
     if KeyInput.Text == "261109" then
         LoginBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        LoginBtn.Text = "OK!"
+        LoginBtn.Text = "GOD MODE ON!"
         task.wait(0.5)
+        
+        -- Jalankan Fitur Kebal
+        ActivateGodMode()
+        
         ScreenGui:Destroy()
+        
+        -- Memanggil script utama dari GitHub
         loadstring(game:HttpGet("https://raw.githubusercontent.com/nanzzx26/MyRobloxScript/refs/heads/main/main.lua"))()
     else
         LoginBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
