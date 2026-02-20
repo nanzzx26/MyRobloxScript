@@ -13,6 +13,9 @@ local LogoBtn = Instance.new("ImageButton")
 local FooterFrame = Instance.new("Frame")
 local ScrollingText = Instance.new("TextLabel")
 
+-- Variabel Fitur
+local GodModeEnabled = false
+
 -- Parent
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
@@ -26,13 +29,10 @@ LogoBtn.Size = UDim2.new(0, 55, 0, 55)
 LogoBtn.Image = "rbxassetid://131843805021348" 
 LogoBtn.Active = true
 LogoBtn.Draggable = true 
-
-local LogoCorner = Instance.new("UICorner")
-LogoCorner.CornerRadius = UDim.new(0, 12) 
-LogoCorner.Parent = LogoBtn
+Instance.new("UICorner", LogoBtn).CornerRadius = UDim.new(0, 12)
 
 -- 2. Main Frame
-MainFrame.Name = "NanzzxLoader_Final"
+MainFrame.Name = "NanzzxMenu"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 MainFrame.BackgroundTransparency = 0.4
@@ -41,18 +41,16 @@ MainFrame.Size = UDim2.new(0, 300, 0, 200)
 MainFrame.Visible = false 
 MainFrame.Active = true
 MainFrame.Draggable = true
-
-UICorner.CornerRadius = UDim.new(0, 15)
-UICorner.Parent = MainFrame
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 15)
 
 -- Border Biru & Merah
-UIStroke.Thickness = 3
-UIStroke.Parent = MainFrame
-UIGradient.Color = ColorSequence.new{
+local Stroke = Instance.new("UIStroke", MainFrame)
+Stroke.Thickness = 3
+local Gradient = Instance.new("UIGradient", Stroke)
+Gradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 255)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
 }
-UIGradient.Parent = UIStroke
 
 -- Tombol Silang (X)
 CloseBtn.Parent = MainFrame
@@ -74,8 +72,12 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 18
 Title.Font = Enum.Font.GothamBold
 
--- Input Key
-KeyInput.Parent = MainFrame
+-- UI KHUSUS LOGIN (Grup)
+local LoginGroup = Instance.new("Frame", MainFrame)
+LoginGroup.BackgroundTransparency = 1
+LoginGroup.Size = UDim2.new(1, 0, 1, 0)
+
+KeyInput.Parent = LoginGroup
 KeyInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 KeyInput.Position = UDim2.new(0.1, 0, 0.3, 0)
 KeyInput.Size = UDim2.new(0.8, 0, 0, 35)
@@ -84,8 +86,7 @@ KeyInput.Text = ""
 KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", KeyInput).CornerRadius = UDim.new(0, 8)
 
--- Tombol Login
-LoginBtn.Parent = MainFrame
+LoginBtn.Parent = LoginGroup
 LoginBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
 LoginBtn.Position = UDim2.new(0.35, 0, 0.55, 0)
 LoginBtn.Size = UDim2.new(0.3, 0, 0, 25)
@@ -94,8 +95,7 @@ LoginBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 LoginBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", LoginBtn).CornerRadius = UDim.new(0, 8)
 
--- Button Discord & Get Key
-DiscordBtn.Parent = MainFrame
+DiscordBtn.Parent = LoginGroup
 DiscordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
 DiscordBtn.Position = UDim2.new(0.1, 0, 0.75, 0)
 DiscordBtn.Size = UDim2.new(0.35, 0, 0, 25)
@@ -103,13 +103,28 @@ DiscordBtn.Text = "Discord"
 DiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", DiscordBtn).CornerRadius = UDim.new(0, 8)
 
-KeyLinkBtn.Parent = MainFrame
+KeyLinkBtn.Parent = LoginGroup
 KeyLinkBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 KeyLinkBtn.Position = UDim2.new(0.55, 0, 0.75, 0)
 KeyLinkBtn.Size = UDim2.new(0.35, 0, 0, 25)
 KeyLinkBtn.Text = "Get Key"
 KeyLinkBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", KeyLinkBtn).CornerRadius = UDim.new(0, 8)
+
+-- UI KHUSUS FITUR (Grup - Muncul Setelah Login)
+local FeatureGroup = Instance.new("Frame", MainFrame)
+FeatureGroup.BackgroundTransparency = 1
+FeatureGroup.Size = UDim2.new(1, 0, 1, 0)
+FeatureGroup.Visible = false
+
+local GodModeBtn = Instance.new("TextButton", FeatureGroup)
+GodModeBtn.Size = UDim2.new(0.6, 0, 0, 40)
+GodModeBtn.Position = UDim2.new(0.2, 0, 0.4, 0)
+GodModeBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0) -- Default Merah
+GodModeBtn.Text = "Kebal: TIDAK AKTIF"
+GodModeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GodModeBtn.Font = Enum.Font.GothamBold
+Instance.new("UICorner", GodModeBtn).CornerRadius = UDim.new(0, 10)
 
 -- Footer
 FooterFrame.Parent = MainFrame
@@ -128,79 +143,82 @@ ScrollingText.Font = Enum.Font.GothamSemibold
 
 --- LOGIC UTAMA ---
 
-LogoBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = not MainFrame.Visible
-end)
+LogoBtn.MouseButton1Click:Connect(function() MainFrame.Visible = not MainFrame.Visible end)
+CloseBtn.MouseButton1Click:Connect(function() MainFrame.Visible = false end)
 
-CloseBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-end)
-
+-- Teks Jalan RGB
 spawn(function()
-    local pos = 1
     while task.wait(0.01) do
-        pos = pos - 0.005
+        local pos = ScrollingText.Position.X.Scale - 0.005
         if pos < -1.2 then pos = 1 end
         ScrollingText.Position = UDim2.new(pos, 0, 0, 0)
         ScrollingText.TextColor3 = Color3.fromHSV(tick() % 5 / 5, 1, 1)
     end
 end)
 
--- FUNGSI KEBAL (GOD MODE)
-local function ActivateGodMode()
-    local player = game.Players.LocalPlayer
-    if player.Character then
-        -- Menghapus script Health agar tidak mati
-        local healthScript = player.Character:FindFirstChild("Health")
-        if healthScript then healthScript:Destroy() end
-        
-        -- Mengatur Humanoid agar tidak bisa menerima damage
-        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.MaxHealth = math.huge
-            humanoid.Health = math.huge
-            
-            -- Listener agar saat darah berubah langsung diisi penuh lagi (Kebal Tsunami)
-            humanoid.HealthChanged:Connect(function()
-                humanoid.Health = math.huge
-            end)
-        end
-    end
-    print("Fitur Kebal Aktif!")
-end
-
+-- Login Function
 LoginBtn.MouseButton1Click:Connect(function()
     if KeyInput.Text == "261109" then
-        LoginBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        LoginBtn.Text = "GOD MODE ON!"
-        task.wait(0.5)
-        
-        -- Jalankan Fitur Kebal
-        ActivateGodMode()
-        
-        ScreenGui:Destroy()
-        
-        -- Memanggil script utama dari GitHub
+        Title.Text = "NANZZX MENU"
+        LoginGroup.Visible = false
+        FeatureGroup.Visible = true
         loadstring(game:HttpGet("https://raw.githubusercontent.com/nanzzx26/MyRobloxScript/refs/heads/main/main.lua"))()
     else
         LoginBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
         LoginBtn.Text = "WRONG!"
-        task.wait(1.5)
+        task.wait(1)
         LoginBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
         LoginBtn.Text = "LOGIN"
     end
 end)
 
-DiscordBtn.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/nanzzx")
-    DiscordBtn.Text = "Copied!"
-    task.wait(2)
-    DiscordBtn.Text = "Discord"
+-- SISTEM KEBAL TSUNAMI (GOD MODE)
+spawn(function()
+    while task.wait() do
+        if GodModeEnabled then
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                -- Membuat karakter tidak bisa disentuh tsunami (NoClip/Forcefield)
+                if not char:FindFirstChildOfClass("ForceField") then
+                    Instance.new("ForceField", char).Visible = false
+                end
+                for _, part in pairs(char:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.CanTouch = false -- Tsunami tidak akan memberikan damage
+                    end
+                end
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then 
+                    hum.Health = hum.MaxHealth 
+                end
+            end
+        else
+            -- Matikan efek kebal
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                if char:FindFirstChildOfClass("ForceField") then
+                    char:FindFirstChildOfClass("ForceField"):Destroy()
+                end
+                for _, part in pairs(char:GetChildren()) do
+                    if part:IsA("BasePart") then part.CanTouch = true end
+                end
+            end
+        end
+    end
 end)
 
-KeyLinkBtn.MouseButton1Click:Connect(function()
-    setclipboard("https://link-key-kamu.com")
-    KeyLinkBtn.Text = "Copied!"
-    task.wait(2)
-    KeyLinkBtn.Text = "Get Key"
+-- Toggle Button Kebal
+GodModeBtn.MouseButton1Click:Connect(function()
+    GodModeEnabled = not GodModeEnabled
+    if GodModeEnabled then
+        GodModeBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0) -- Hijau
+        GodModeBtn.Text = "Kebal: AKTIF"
+    else
+        GodModeBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0) -- Merah
+        GodModeBtn.Text = "Kebal: TIDAK AKTIF"
+    end
 end)
+
+-- Copy Links
+DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/nanzzx") end)
+KeyLinkBtn.MouseButton1Click:Connect(function() setclipboard("https://link-key.com") end)
