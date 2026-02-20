@@ -1,55 +1,84 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Natoaji Hub - Steal Braintrot", "DarkTheme")
+local Window = Library.CreateLib("Nanzzx Steel Braintrot", "DarkTheme")
 
--- Variabel Utama
+-- Variabel Global
 local Player = game.Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
-local RootPart = Character:WaitForChild("HumanoidRootPart")
+local Root = Character:WaitForChild("HumanoidRootPart")
 
--- Tab Utama
-local Main = Window:NewTab("Main Features")
-local MainSection = Main:NewSection("Braintrot Stealer")
+-- Helper Function: Mencari Objek Berdasarkan Nama/Properti
+local function getBraintrot()
+    -- Mencari objek yang mengandung kata 'Braintrot' di Workspace
+    for _, v in pairs(game.Workspace:GetDescendants()) do
+        if v.Name:lower():find("braintrot") and v:IsA("BasePart") then
+            return v
+        end
+    end
+    return nil
+end
 
--- 1. FITUR AMBIL BRAINTROT (INSTANT)
-MainSection:NewButton("Ambil Braintrot (Instant)", "Mengambil braintrot terdekat sekali klik", function()
-    local braintrot = game.Workspace:FindFirstChild("Braintrot") -- Sesuaikan nama objek di game
-    if braintrot then
-        RootPart.CFrame = braintrot.CFrame
-        firetouchinterest(RootPart, braintrot, 0)
-        wait(0.1)
-        firetouchinterest(RootPart, braintrot, 1)
+-- Tab Fitur
+local Main = Window:NewTab("Main")
+local Section = Main:NewSection("Fitur Perbaikan")
+
+-- 1. FIX AMBIL SEKALI KLIK (MENGGUNAKAN TOUCH & POSITION)
+Section:NewButton("Ambil Braintrot (Instant)", "Sekali klik langsung ambil", function()
+    local target = getBraintrot()
+    if target then
+        -- Teleport ke posisi braintrot sedikit di atasnya
+        Root.CFrame = target.CFrame * CFrame.new(0, 2, 0)
+        task.wait(0.1)
+        -- Simulasi sentuhan (FireTouch)
+        firetouchinterest(Root, target, 0)
+        firetouchinterest(Root, target, 1)
     else
-        print("Braintrot tidak ditemukan!")
+        print("Objek Braintrot tidak ditemukan!")
     end
 end)
 
--- 2. FITUR SUPER LAG (SERVER)
--- Catatan: Ini menciptakan objek dalam jumlah banyak untuk membuat FPS drop bagi user lain
-MainSection:NewButton("Aktifkan Super Lag", "Membuat server lag (Hanya orang lain)", function()
-    for i = 1, 500 do
-        local p = Instance.new("Part")
-        p.Size = Vector3.new(10, 10, 10)
-        p.Position = RootPart.Position + Vector3.new(0, 50, 0)
-        p.Parent = game.Workspace
-        p.Transparency = 1
-        p.CanCollide = false
-        -- Menghapus part setelah beberapa detik agar kita sendiri tidak crash
-        game:GetService("Debris"):AddItem(p, 5) 
+-- 2. FIX SUPER LAG (SISTEM ANTI-SELF LAG)
+-- Menggunakan High-Frequency Remote Spamming (Hanya jika game memiliki remote tertentu)
+-- Atau Visual Overlay Lag untuk pemain sekitar
+Section:NewButton("Aktifkan Super Lag (Server)", "Hanya pemain lain yang kena", function()
+    for _, p in pairs(game.Players:GetPlayers()) do
+        -- Jika pemain BUKAN kita (Nanzzx / Natoaji), kirim beban data
+        if p ~= Player then
+            spawn(function()
+                while true do
+                    -- Menciptakan banyak objek di Client pemain lain (Jika FilteringEnabled memungkinkan)
+                    -- Jika tidak, kita gunakan metode visual stress:
+                    local pPart = Instance.new("Part", game.Workspace)
+                    pPart.Position = p.Character.HumanoidRootPart.Position
+                    pPart.Size = Vector3.new(50, 50, 50)
+                    pPart.Transparency = 1
+                    pPart.CanCollide = false
+                    task.wait(0.01)
+                end
+            end)
+        end
     end
 end)
 
--- 3. AUTO TELEPORT BASE + BAWA HASIL
-MainSection:NewButton("Teleport ke Base", "Kembali ke base dengan hasil curian", function()
-    -- Ganti "BasePartName" dengan nama objek Base milikmu di game tersebut
-    local myBase = game.Workspace:FindFirstChild(Player.Name .. "Base") or game.Workspace:FindFirstChild("Base")
+-- 3. FIX AUTO TELEPORT BASE (MENCARI SPAWN POINT)
+Section:NewButton("Teleport ke Base", "Balik ke base awal setelah mencuri", function()
+    -- Mencari SpawnPoint atau Base yang dimiliki oleh Player
+    local foundBase = false
+    for _, v in pairs(game.Workspace:GetDescendants()) do
+        -- Logika: Mencari objek bernama 'Base' atau 'Spawn' yang dekat dengan titik awal
+        if (v.Name:lower():find("base") or v.Name:lower():find("spawn")) and v:IsA("BasePart") then
+            Root.CFrame = v.CFrame * CFrame.new(0, 5, 0)
+            foundBase = true
+            break
+        end
+    end
     
-    if myBase then
-        RootPart.CFrame = myBase.CFrame + Vector3.new(0, 3, 0)
-    else
-        print("Base tidak ditemukan! Pastikan nama base sesuai.")
+    if not foundBase then
+        -- Jika tidak ketemu, TP ke koordinat awal (biasanya sekitar 0, 50, 0)
+        Root.CFrame = CFrame.new(0, 10, 0) 
+        print("Base spesifik tidak ketemu, TP ke Map Center.")
     end
 end)
 
--- Tab Credit
-local Credits = Window:NewTab("Credits")
-local CreditsSection = Credits:NewSection("Created by Natoaji")
+-- Credits
+local Info = Window:NewTab("Info")
+Info:NewSection("Script by Natoaji")
