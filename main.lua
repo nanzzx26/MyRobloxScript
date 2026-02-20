@@ -17,14 +17,14 @@ local ScrollingText = Instance.new("TextLabel")
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- 1. Tombol Logo (Ukuran Sedang, Melengkung, Fix Putih)
+-- 1. Tombol Logo (Ukuran Sedang, Melengkung, Menggunakan Asset ID)
 LogoBtn.Name = "NanzzxLogo"
 LogoBtn.Parent = ScreenGui
 LogoBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 LogoBtn.Position = UDim2.new(0, 50, 0, 50) 
 LogoBtn.Size = UDim2.new(0, 55, 0, 55)
--- Menggunakan rbxthumb sebagai alternatif stabil untuk memuat link luar jika memungkinkan
-LogoBtn.Image = "https://files.catbox.moe/safonc.jpg" 
+-- Menggunakan rbxassetid agar gambar muncul stabil
+LogoBtn.Image = "rbxassetid://131843805021348" 
 LogoBtn.Active = true
 LogoBtn.Draggable = true 
 
