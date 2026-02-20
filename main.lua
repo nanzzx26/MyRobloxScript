@@ -17,19 +17,19 @@ local ScrollingText = Instance.new("TextLabel")
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- 1. Tombol Logo (Ukuran Sedang & Melengkung)
+-- 1. Tombol Logo (Ukuran Sedang, Melengkung, Fix Putih)
 LogoBtn.Name = "NanzzxLogo"
 LogoBtn.Parent = ScreenGui
 LogoBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 LogoBtn.Position = UDim2.new(0, 50, 0, 50) 
-LogoBtn.Size = UDim2.new(0, 50, 0, 50) -- Ukuran diperkecil dikit biar pas
-LogoBtn.Image = "rbxassetid://128509494672688" -- Template ID
+LogoBtn.Size = UDim2.new(0, 55, 0, 55)
+-- Menggunakan rbxthumb sebagai alternatif stabil untuk memuat link luar jika memungkinkan
 LogoBtn.Image = "https://files.catbox.moe/safonc.jpg" 
 LogoBtn.Active = true
-LogoBtn.Draggable = true -- Bisa dipindahkan
+LogoBtn.Draggable = true 
 
 local LogoCorner = Instance.new("UICorner")
-LogoCorner.CornerRadius = UDim.new(0, 12) -- Sisi gambar melengkung
+LogoCorner.CornerRadius = UDim.new(0, 12) 
 LogoCorner.Parent = LogoBtn
 
 -- 2. Main Frame (Key System)
@@ -58,11 +58,11 @@ UIGradient.Parent = UIStroke
 -- Tombol Silang (X)
 CloseBtn.Parent = MainFrame
 CloseBtn.BackgroundTransparency = 1
-CloseBtn.Position = UDim2.new(0.85, 0, 0.05, 0)
+CloseBtn.Position = UDim2.new(0.88, 0, 0.05, 0)
 CloseBtn.Size = UDim2.new(0, 30, 0, 30)
 CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
-CloseBtn.TextSize = 20
+CloseBtn.TextSize = 22
 CloseBtn.Font = Enum.Font.GothamBold
 
 -- Judul
@@ -113,7 +113,7 @@ KeyLinkBtn.Text = "Get Key"
 KeyLinkBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", KeyLinkBtn).CornerRadius = UDim.new(0, 8)
 
--- Footer (Running Text Gak Tembus)
+-- Footer (Running Text Tetap Di Dalam)
 FooterFrame.Parent = MainFrame
 FooterFrame.BackgroundTransparency = 1
 FooterFrame.ClipsDescendants = true
